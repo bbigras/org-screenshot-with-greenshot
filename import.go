@@ -20,10 +20,10 @@ type Path struct {
 	ChanQuit    chan int
 }
 
-func (t *Path) Send(path string, reply *int) error {
-	defer close(t.ChanQuit)
+func (p *Path) Send(path string, reply *int) error {
+	defer close(p.ChanQuit)
 
-	_, errCopyFile := CopyFile(path, t.OrgFilePath)
+	_, errCopyFile := CopyFile(path, p.OrgFilePath)
 	if errCopyFile != nil {
 		return errCopyFile
 	}
