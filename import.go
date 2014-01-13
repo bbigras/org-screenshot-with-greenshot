@@ -51,7 +51,7 @@ func main() {
 	flag.Parse()
 
 	switch {
-	case *send != "":
+	case *send != "": // client (called by Greenshot)
 		client, err := rpc.DialHTTP("tcp", fmt.Sprintf("127.0.0.1:%d", *port))
 		if err != nil {
 			panic(err)
@@ -61,7 +61,7 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-	default:
+	default: // server (called by org-screenshot)
 		path := &Path{
 			OrgFilePath: os.Args[1],
 			ChanQuit:    chanQuit,
