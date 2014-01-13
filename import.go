@@ -22,22 +22,15 @@ type Path struct {
 }
 
 func (t *Path) Send(path string, reply *int) error {
+	defer close(t.ChanQuit)
+
 	log.Println("copy", t.OrgFilePath, path)
 	_, errCopyFile := CopyFile(path, t.OrgFilePath)
 	if errCopyFile != nil {
-		close(t.ChanQuit)
 		return errCopyFile
 	}
 
-	errRemove := os.Remove(path)
-	if errRemove != nil {
-		close(t.ChanQuit)
-		return errRemove
-	}
-
-	close(t.ChanQuit)
-
-	return nil
+	return os.Remove(path)
 }
 
 func CopyFile(src, dst string) (int64, error) {
