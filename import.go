@@ -61,6 +61,8 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+	case len(os.Args) != 2:
+		fmt.Println("Must be called with one argument")
 	default: // server (called by org-screenshot)
 		path := &Path{
 			OrgFilePath: os.Args[1],
