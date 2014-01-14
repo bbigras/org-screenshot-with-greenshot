@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/lxn/walk"
 	"io"
 	"net"
 	"net/http"
@@ -54,12 +55,14 @@ func main() {
 	case *send != "": // client (called by Greenshot)
 		client, err := rpc.DialHTTP("tcp", fmt.Sprintf("127.0.0.1:%d", *port))
 		if err != nil {
-			panic(err)
+			walk.MsgBox(nil, "Error", "Can't connect to server", walk.MsgBoxIconExclamation)
+			return
 		}
 
 		err = client.Call("Path.Send", *send, nil)
 		if err != nil {
-			panic(err)
+			walk.MsgBox(nil, "Error", "Error sending the path", walk.MsgBoxIconExclamation)
+			return
 		}
 	case len(os.Args) != 2:
 		fmt.Println("Must be called with one argument")
@@ -73,7 +76,8 @@ func main() {
 		rpc.HandleHTTP()
 		l, e := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 		if e != nil {
-			panic(e)
+			walk.MsgBox(nil, "Error", fmt.Sprintf("Can't listen on port %d (TCP)", *port), walk.MsgBoxIconExclamation)
+			return
 		}
 		go http.Serve(l, nil)
 		<-chanQuit
